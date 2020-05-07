@@ -1,8 +1,5 @@
 {
-	"devDependencies": {
-		"browser-sync": "^2.26.7"
-	},
 	"scripts": {
-		"serve": "browser-sync start --proxy 'localhost:9000' --files 'index.html' & harp server"
+		"serve": "npx serve docs"
 	}
 }
