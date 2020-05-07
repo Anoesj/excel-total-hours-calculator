@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-duration-format/2.2.2/moment-duration-format.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="icon" href="data:;base64,iVBORwOKGO="/>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        padding: 50px;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      }
+
+      #app {
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 50px;
+        width: 800px;
+      }
+
+      textarea {
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script defer>
+      new Vue({
+        el: '#app',
+        template:  `<div id="app">
+                      <section class="total-hours">
+                        <p><em>Select column with duration values (HH:mm) in Excel, copy and paste them in the textarea below.</em></p>
+                        <textarea rows="30" cols="20" id="excel-input" v-model="durationsString"></textarea>
+                        <p><strong v-if="totalHours !== null" v-html="totalHours"></strong></br></p>
+                      </section>
+                    </div>`,
+
+        data () {
+          const appName = 'excel-total-hours-calculator';
+
+          return {
+            appName,
+            durationsString: '',
+          };
+        },
+
+        computed: {
+          totalHours () {
+            if (this.durationsString === '') {
+              return null;
+            }
+            else {
+              const durations = this.durationsString.split('\n'),
+                    totalDurations = durations.reduce((prev, cur) => {
+                      return moment.duration(cur).add(prev);
+                    }, 0),
+                    totalMs = totalDurations.asMilliseconds();
+              return `Total hours and minutes: <span contenteditable="true">${moment.duration(totalMs).format("HH:mm")}</span>`;
+            }
+          },
+        },
+
+      });
+    </script>
+  </body>
+</html>
